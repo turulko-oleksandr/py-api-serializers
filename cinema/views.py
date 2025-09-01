@@ -2,9 +2,14 @@
 from rest_framework import viewsets
 
 from cinema.models import Genre, CinemaHall, Actor, Movie, MovieSession
-from cinema.serializers import GenreSerializer, CinemaHallSerializer, ActorSerializer, \
-    MovieSessionSerializer, MovieSessionListSerializer, MovieListSerializer, MovieCreateUpdateSerializer, \
-    MovieDetailSerializer, MovieSessionCreateSerializer, MovieSessionDetailSerializer
+from cinema.serializers import (GenreSerializer, CinemaHallSerializer,
+                                ActorSerializer,
+                                MovieSessionListSerializer,
+                                MovieListSerializer,
+                                MovieCreateUpdateSerializer,
+                                MovieDetailSerializer,
+                                MovieSessionCreateSerializer,
+                                MovieSessionDetailSerializer)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -26,26 +31,27 @@ class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return MovieListSerializer
-        if self.action == 'retrieve':
+        if self.action == "retrieve":
             return MovieDetailSerializer
         return MovieCreateUpdateSerializer
+
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
     queryset = MovieSession.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return MovieSessionListSerializer
-        if self.action == 'retrieve':
-            return MovieSessionDetailSerializer # <-- Use the new detail serializer here
-        if self.action in ('create', 'update', 'partial_update'):
+        if self.action == "retrieve":
+            return MovieSessionDetailSerializer
+        if self.action in ("create", "update", "partial_update"):
             return MovieSessionCreateSerializer
         return MovieSessionListSerializer
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action in ('list', 'retrieve'):
-            return queryset.select_related('movie', 'cinema_hall')
+        if self.action in ("list", "retrieve"):
+            return queryset.select_related("movie", "cinema_hall")
         return queryset
